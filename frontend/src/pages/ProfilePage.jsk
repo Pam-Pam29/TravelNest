@@ -1,1 +1,326 @@
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchUserProfile, updateUserProfile } from '../redux/actions/userActions';
+import { fetchUserBookings } from '../redux/actions/bookingActions';
+import BookingCard from './BookingCard';
+import { toast } from 'react-toastify';
+import { FaUser, FaHistory, FaEdit, FaStar, FaSignOutAlt } from 'react-icons/fa';
 
+const UserProfilePage = () => {
+  const dispatch = useDispatch();
+  const { user, loading: userLoading } = useSelector(state => state.user);
+  const { bookings, loading: bookingsLoading } = useSelector(state => state.bookings);
+  
+  const [activeTab, setActiveTab] = useState('profile');
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    profilePicture: ''
+  });
+
+  useEffect(() => {
+    dispatch(fetchUserProfile());
+    dispatch(fetchUserBookings());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        address: user.address || '',
+        profilePicture: user.profilePicture || ''
+      });
+    }
+  }, [user]);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(updateUserProfile(formData));
+    setIsEditing(false);
+    toast.success('Profile updated successfully!');
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData({
+        ...formData,
+        profilePicture: reader.result
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  if (userLoading) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
+
+  const renderProfileContent = () => {
+    if (isEditing) {
+      return (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex flex-col items-center space-y-4 mb-6">
+            <div className="relative">
+              <img 
+                src={formData.profilePicture || '/profile-placeholder.jpg'} 
+                alt="Profile" 
+                className="w-32 h-32 rounded-full object-cover border-4 border-blue-500"
+              />
+              <label className="absolute bottom-0 right-0 bg-blue-500 rounded-full p-2 cursor-pointer">
+                <FaEdit className="text-white" />
+                <input 
+                  type="file" 
+                  className="hidden" 
+                  accept="image/*" 
+                  onChange={handleFileChange}
+                />
+              </label>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-gray-700 mb-1">Full Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+                disabled
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 mb-1">Phone</label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 mb-1">Address</label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+          
+          <div className="flex justify-end space-x-2">
+            <button
+              type="button"
+              onClick={() => setIsEditing(false)}
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            >
+              Save Changes
+            </button>
+          </div>
+        </form>
+      );
+    }
+
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col items-center space-y-4 mb-6">
+          <img 
+            src={user.profilePicture || '/profile-placeholder.jpg'} 
+            alt="Profile" 
+            className="w-32 h-32 rounded-full object-cover border-4 border-blue-500"
+          />
+          <h1 className="text-2xl font-bold">{user.name}</h1>
+          <button
+            onClick={() => setIsEditing(true)}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2"
+          >
+            <FaEdit /> Edit Profile
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h2 className="text-lg font-semibold mb-2">Contact Information</h2>
+            <p><span className="font-medium">Email:</span> {user.email}</p>
+            <p><span className="font-medium">Phone:</span> {user.phone || 'Not provided'}</p>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h2 className="text-lg font-semibold mb-2">Address</h2>
+            <p>{user.address || 'Not provided'}</p>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg md:col-span-2">
+            <h2 className="text-lg font-semibold mb-2">Account Information</h2>
+            <p><span className="font-medium">Member since:</span> {new Date(user.createdAt).toLocaleDateString()}</p>
+            <p><span className="font-medium">Last login:</span> {new Date(user.lastLogin).toLocaleDateString()}</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderBookingsContent = () => {
+    if (bookingsLoading) {
+      return <div className="text-center py-8">Loading your bookings...</div>;
+    }
+
+    if (!bookings || bookings.length === 0) {
+      return (
+        <div className="text-center py-12 bg-gray-50 rounded-lg">
+          <h3 className="text-xl font-medium text-gray-600 mb-2">No bookings yet</h3>
+          <p className="text-gray-500 mb-6">Explore our packages and book your next adventure!</p>
+          <a href="/packages" className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            Explore Packages
+          </a>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold">Your Travel History</h2>
+        <div className="space-y-4">
+          {bookings.map(booking => (
+            <BookingCard key={booking.id} booking={booking} />
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const renderReviewsContent = () => {
+    if (user.reviews && user.reviews.length > 0) {
+      return (
+        <div className="space-y-6">
+          <h2 className="text-xl font-semibold">Your Reviews</h2>
+          <div className="space-y-4">
+            {user.reviews.map(review => (
+              <div key={review.id} className="bg-white p-4 rounded-lg shadow">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-medium">{review.packageName}</h3>
+                  <div className="flex items-center">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar key={i} className={i < review.rating ? "text-yellow-400" : "text-gray-300"} />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-gray-600 mb-2">{review.comment}</p>
+                <div className="text-sm text-gray-500 flex justify-between">
+                  <span>Posted on {new Date(review.createdAt).toLocaleDateString()}</span>
+                  <button className="text-blue-500 hover:underline">Edit</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    return (
+      <div className="text-center py-12 bg-gray-50 rounded-lg">
+        <h3 className="text-xl font-medium text-gray-600 mb-2">No reviews yet</h3>
+        <p className="text-gray-500">Share your experiences with other travelers!</p>
+      </div>
+    );
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="flex flex-col md:flex-row">
+          {/* Sidebar */}
+          <div className="w-full md:w-64 bg-gray-800 text-white">
+            <div className="p-6 border-b border-gray-700">
+              <h2 className="text-xl font-bold">User Dashboard</h2>
+            </div>
+            <nav className="p-4">
+              <ul className="space-y-2">
+                <li>
+                  <button 
+                    onClick={() => setActiveTab('profile')}
+                    className={`w-full text-left px-4 py-2 rounded-lg flex items-center gap-3 ${
+                      activeTab === 'profile' ? 'bg-blue-600' : 'hover:bg-gray-700'
+                    }`}
+                  >
+                    <FaUser /> Profile
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => setActiveTab('bookings')}
+                    className={`w-full text-left px-4 py-2 rounded-lg flex items-center gap-3 ${
+                      activeTab === 'bookings' ? 'bg-blue-600' : 'hover:bg-gray-700'
+                    }`}
+                  >
+                    <FaHistory /> My Bookings
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => setActiveTab('reviews')}
+                    className={`w-full text-left px-4 py-2 rounded-lg flex items-center gap-3 ${
+                      activeTab === 'reviews' ? 'bg-blue-600' : 'hover:bg-gray-700'
+                    }`}
+                  >
+                    <FaStar /> My Reviews
+                  </button>
+                </li>
+                <li className="pt-6 border-t border-gray-700 mt-6">
+                  <button 
+                    onClick={() => dispatch({ type: 'LOGOUT' })}
+                    className="w-full text-left px-4 py-2 rounded-lg text-red-300 hover:bg-gray-700 flex items-center gap-3"
+                  >
+                    <FaSignOutAlt /> Logout
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          
+          {/* Content */}
+          <div className="flex-1 p-6">
+            {activeTab === 'profile' && renderProfileContent()}
+            {activeTab === 'bookings' && renderBookingsContent()}
+            {activeTab === 'reviews' && renderReviewsContent()}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UserProfilePage;
