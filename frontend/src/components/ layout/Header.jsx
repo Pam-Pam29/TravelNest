@@ -232,4 +232,30 @@ const Header = () => {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              
+         color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            TN
+          </Typography>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            <Button
+              component={RouterLink}
+              to="/packages"
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              Packages
+            </Button>
+          </Box>
+
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            {isAuthenticated ? authLinks : guestLinks}
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
+  );
+};
+
+export default Header;
