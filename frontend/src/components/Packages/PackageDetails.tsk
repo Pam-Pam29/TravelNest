@@ -1,1 +1,35 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { packageService } from '../../services/packageService';
+import { bookingService } from '../../services/bookingService';
+import { Package } from '../../types/Package';
+
+const PackageDetails: React.FC = () => {
+  const [pkg, setPkg] = useState<Package | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [travelers, setTravelers] = useState(1);
+  const [bookingError, setBookingError] = useState('');
+
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchPackageDetails();
+  }, [id]);
+
+  const fetchPackageDetails = async () => {
+    if (!id) {
+      setError('No package ID provided');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const packageDetails = await packageService.getPackageById(id);
+      setPkg(packageDetails);
+      setLoading(false);
+    } catch (err) {
+      setError('Failed to fetch package details');
+      set
 
