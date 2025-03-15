@@ -31,8 +31,7 @@ const PackageDetails: React.FC = () => {
       setLoading(false);
     } catch (err) {
       setError('Failed to fetch package details');
-      set
-Loading(false);
+      setLoading(false);
       console.error(err);
     }
   };

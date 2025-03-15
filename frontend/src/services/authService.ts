@@ -15,7 +15,7 @@ export interface RegisterCredentials extends LoginCredentials {
 
 export const authService = {
   async login(credentials: LoginCredentials) {
-    const response = await axios.post(${API_URL}/auth/login, credentials);
+    const response = await axios.post('${API_URL}/Auth/login', credentials);
     if (response.data.token) {
       localStorage.setItem('user', JSON.stringify(response.data.user));
       localStorage.setItem('token', response.data.token);
@@ -24,7 +24,7 @@ export const authService = {
   },
 
   async register(credentials: RegisterCredentials) {
-    const response = await axios.post(${API_URL}/auth/register, credentials);
+    const response = await axios.post('${API_URL}/auth/register', credentials);
     if (response.data.token) {
       localStorage.setItem('user', JSON.stringify(response.data.user));
       localStorage.setItem('token', response.data.token);

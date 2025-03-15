@@ -1,3 +1,4 @@
+import { Package } from './Package';
 export interface Booking {
   _id: string;
   package: Package;

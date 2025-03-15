@@ -11,16 +11,16 @@ export const bookingService = {
     numberOfTravelers: number;
   }) {
     const token = authService.getToken();
-    const response = await axios.post(${API_URL}/bookings, bookingData, {
-      headers: { Authorization: Bearer ${token} }
+    const response = await axios.post('${API_URL}/bookings', bookingData, {
+      headers: { Authorization: 'Bearer ${token}' }
     });
     return response.data;
   },
 
   async getUserBookings() {
     const token = authService.getToken();
-    const response = await axios.get(${API_URL}/bookings, {
-      headers: { Authorization: Bearer ${token} }
+    const response = await axios.get('${API_URL}/bookings', {
+      headers: { Authorization: 'Bearer ${token}' }
     });
     return response.data;
   },
@@ -28,10 +28,10 @@ export const bookingService = {
   async cancelBooking(bookingId: string) {
     const token = authService.getToken();
     const response = await axios.patch(
-      ${API_URL}/bookings/${bookingId}/cancel, 
-      {}, 
+      '${API_URL}/bookings/${bookingId}/cancel', 
+     {},
       {
-        headers: { Authorization: Bearer ${token} }
+        headers: { Authorization: 'Bearer ${token}' }
       }
     );
     return response.data;

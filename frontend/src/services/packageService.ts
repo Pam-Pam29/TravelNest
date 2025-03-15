@@ -11,19 +11,19 @@ export const packageService = {
     destination?: string;
     duration?: number;
   }) {
-    const response = await axios.get(${API_URL}/packages, { params: filters });
+    const response = await axios.get('${API_URL}/packages, { params: filters }');
     return response.data;
   },
 
   async getPackageById(id: string) {
-    const response = await axios.get(${API_URL}/packages/${id});
+    const response = await axios.get('${API_URL}/packages/${id}');
     return response.data;
   },
 
   async createPackage(packageData: Partial<Package>) {
     const token = authService.getToken();
-    const response = await axios.post(${API_URL}/packages, packageData, {
-      headers: { Authorization: Bearer ${token} }
+    const response = await axios.post('${API_URL}/packages, packageData', {
+      headers: { Authorization: 'Bearer ${token}' }
     });
     return response.data;
   }
