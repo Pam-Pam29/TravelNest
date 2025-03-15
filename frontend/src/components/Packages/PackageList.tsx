@@ -115,5 +115,5 @@ const PackageList: React.FC = () => {
       )}
     </div>
   );
+  export default PackageList;
 };
-
