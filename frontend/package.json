@@ -20,7 +20,8 @@
   },
   "scripts": {
     "start": "react-scripts --openssl-legacy-provider start",
-    "build": "react-scripts --openssl-legacy-provider build",
+     "prebuild": "chmod +x node_modules/.bin/react-scripts",
+    "build": "npx react-scripts --openssl-legacy-provider build",
     "test": "react-scripts --openssl-legacy-provider test",
     "eject": "react-scripts eject",
     "lint": "eslint src --ext .ts,.tsx"
