@@ -4,6 +4,7 @@
   "description": "Backend for Travenest travel booking platform",
   "main": "dist/server.js",
   "scripts": {
+    "clean": "rimraf dist"
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
