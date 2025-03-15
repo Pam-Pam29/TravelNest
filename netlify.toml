@@ -1,0 +1,3 @@
+[build]
+  command = "cd frontend && npm install && npm run build" # Adjust this to your actual build command
+  publish = "frontend/build" # Adjust this to your actual build output directory
