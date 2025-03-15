@@ -41,11 +41,11 @@ router.get('/', async (req, res) => {
 // Get single package
 router.get('/:id', async (req, res) => {
   try {
-    const package = await Package.findById(req.params.id);
-    if (!package) {
+    const pkg = await Package.findById(req.params.id);
+    if (!pkg) {
       return res.status(404).json({ message: 'Package not found' });
     }
-    res.json(package);
+    res.json(pkg);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error fetching package' });
