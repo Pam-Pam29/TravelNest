@@ -1,3 +1,7 @@
 [build]
-  command = "cd frontend && npm install && npm run build" # Adjust this to your actual build command
-  publish = "frontend/build" # Adjust this to your actual build output directory
+  command = "cd frontend && npm install && npm run build"
+  publish = "frontend/build"
+
+[build.environment]
+  NODE_VERSION = "16" # Try a version compatible with your react-scripts
+  NPM_FLAGS = "--legacy-peer-deps"
