@@ -102,7 +102,7 @@ const PackageList: React.FC = () => {
                     ${pkg.price}
                   </span>
                   <Link 
-                    to={/packages/${pkg._id}} 
+                    to={`/packages/${pkg._id}`}
                     className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                   >
                     View Details
@@ -115,5 +115,5 @@ const PackageList: React.FC = () => {
       )}
     </div>
   );
-  export default PackageList;
 };
+export default PackageList
