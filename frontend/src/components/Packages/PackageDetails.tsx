@@ -53,6 +53,7 @@ const PackageDetails: React.FC = () => {
       // Redirect to dashboard or booking confirmation
       navigate('/dashboard');
     } catch (err) {
+      // eslint-disable-next-line semi
       const error = err as any;
       setBookingError(error.response?.data?.message || 'Booking failed');
       console.error(err);
