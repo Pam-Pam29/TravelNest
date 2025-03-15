@@ -181,4 +181,3 @@ const PackageDetails: React.FC = () => {
 };
 
 export default PackageDetails;
-
