@@ -6,11 +6,7 @@ class AppError extends Error {
     constructor(message, statusCode) {
         super(message);
         this.statusCode = statusCode;
-        this.status = $;
-        {
-            statusCode;
-        }
-        startsWith('4') ? 'fail' : 'error';
+        this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
         this.isOperational = true;
         Error.captureStackTrace(this, this.constructor);
     }
@@ -36,6 +32,7 @@ const catchAsync = (fn) => {
 exports.catchAsync = catchAsync;
 // 404 Not Found handler
 const notFoundHandler = (req, res, next) => {
-    const err = new AppError(Can, 't find ${req.originalUrl} on this server!, 404);, next(err));
+    const err = new AppError(`Can't find ${req.originalUrl} on this server!`, 404);
+    next(err);
 };
 exports.notFoundHandler = notFoundHandler;
