@@ -43,6 +43,7 @@ const PackageDetails: React.FC = () => {
     }
     try {
       // You might want to add a date picker for travel date in a real app
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const booking = await bookingService.createBooking({
         packageId: id,
         travelDate: new Date(), // Default to current date

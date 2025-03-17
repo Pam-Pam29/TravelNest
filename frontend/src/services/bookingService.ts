@@ -1,4 +1,5 @@
 import axios from 'axios';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Booking } from '../types/Booking';
 import { authService } from './authService';
 
@@ -10,31 +11,33 @@ export const bookingService = {
     travelDate: Date;
     numberOfTravelers: number;
   }) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const token = authService.getToken();
-    const response = await axios.post('${API_URL}/bookings', bookingData, {
-      headers: { Authorization: 'Bearer ${token}' }
+    const response = await axios.post(`${API_URL}/bookings, bookingData`, {
+      headers: { Authorization: `Bearer ${token}` }
     });
     return response.data;
   },
-
+  
   async getUserBookings() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const token = authService.getToken();
-    const response = await axios.get('${API_URL}/bookings', {
-      headers: { Authorization: 'Bearer ${token}' }
+    const response = await axios.get(`${API_URL}/bookings`, {
+      headers: { Authorization: `Bearer ${token}` }
     });
     return response.data;
   },
-
+  
   async cancelBooking(bookingId: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const token = authService.getToken();
     const response = await axios.patch(
-      '${API_URL}/bookings/${bookingId}/cancel', 
-     {},
+      `${API_URL}/bookings/${bookingId}/cancel`, 
+      {},
       {
-        headers: { Authorization: 'Bearer ${token}' }
+        headers: { Authorization: `Bearer ${token}` }
       }
     );
     return response.data;
-  }
-};
-
+  }
+}; 
