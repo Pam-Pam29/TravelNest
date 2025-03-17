@@ -20,10 +20,18 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/travenest')
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+  // Connect to MongoDB with improved options
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/travenest', {
+  serverSelectionTimeoutMS: 5000,  // Timeout faster during connection
+  socketTimeoutMS: 45000,          // Keep sockets alive longer
+})
+.then(() => console.log('MongoDB connected successfully'))
+.catch((err) => {
+  console.error('MongoDB connection error:', err);
+  if (err.name === 'MongoTimeoutError') {
+    console.error('Connection timed out. Check network settings and connection string.');
+  }
+});
 
 // Health check route (place after middleware but before other routes)
 app.get('/api/health', (req, res) => {
