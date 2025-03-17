@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { packageService } from '../../services/packageService';
 import { bookingService } from '../../services/bookingService';
@@ -14,14 +14,7 @@ const PackageDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-
-  const fetchPackageDetails = async () => {
-    useEffect(() => {
-      fetchPackageDetails();
-    }, [id, fetchPackageDetails]); // Add fetchPackageDetails to dependency arrayconst fetchPackageDetails = async () => {
-      // ...
-    };
-    
+  const fetchPackageDetails = useCallback(async () => {
     if (!id) {
       setError('No package ID provided');
       setLoading(false);
@@ -37,7 +30,11 @@ const PackageDetails: React.FC = () => {
       setLoading(false);
       console.error(err);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchPackageDetails();
+  }, [fetchPackageDetails]);
 
   const handleBookPackage = async () => {
     if (!id) {
@@ -183,4 +180,4 @@ const PackageDetails: React.FC = () => {
   );
 };
 
-export default PackageDetails;
+export default PackageDetails;
