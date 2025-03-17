@@ -16,53 +16,67 @@ router.get('/', async (req, res) => {
 
     // Build filter object
     const filter: any = {};
-
+    
     if (minPrice) filter.price = { $gte: Number(minPrice) };
-    if (maxPrice) filter.price = { 
-      ...filter.price, 
-      $lte: Number(maxPrice) 
-    };
+    if (maxPrice) {
+      filter.price = { 
+        ...filter.price, 
+        $lte: Number(maxPrice) 
+      };
+    }
+    
     if (destination) {
       filter.destinations = { 
         $regex: destination as string, 
         $options: 'i' 
       };
     }
+    
     if (duration) filter.duration = Number(duration);
-
-    const packages = await Package.find(filter);
-    res.json(packages);
+    
+    const travelPackages = await Package.find(filter);
+    res.json(travelPackages);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error fetching packages' });
+    console.error('Error fetching packages:', error);
+    res.status(500).json({ 
+      message: 'Error fetching packages', 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    });
   }
 });
 
 // Get single package
 router.get('/:id', async (req, res) => {
   try {
-    const pkg = await Package.findById(req.params.id);
-    if (!pkg) {
+    const travelPackage = await Package.findById(req.params.id);
+    
+    if (!travelPackage) {
       return res.status(404).json({ message: 'Package not found' });
     }
-    res.json(pkg);
+    
+    res.json(travelPackage);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error fetching package' });
+    console.error('Error fetching package:', error);
+    res.status(500).json({ 
+      message: 'Error fetching package', 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    });
   }
 });
 
 // Create package (admin only)
 router.post('/', authMiddleware, async (req, res) => {
   try {
-    const newPackage = new Package(req.body);
-    await newPackage.save();
-    res.status(201).json(newPackage);
+    const newTravelPackage = new Package(req.body);
+    await newTravelPackage.save();
+    res.status(201).json(newTravelPackage);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error creating package' });
+    console.error('Error creating package:', error);
+    res.status(500).json({ 
+      message: 'Error creating package', 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    });
   }
 });
 
-export default router;
-
+export default router;
