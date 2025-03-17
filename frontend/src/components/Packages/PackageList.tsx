@@ -13,9 +13,7 @@ const PackageList: React.FC = () => {
   const [maxPrice, setMaxPrice] = useState('');
   const [destination, setDestination] = useState('');
 
-  useEffect(() => {
-    fetchPackages();
-  }, []);
+
 
   const fetchPackages = async () => {
     try {

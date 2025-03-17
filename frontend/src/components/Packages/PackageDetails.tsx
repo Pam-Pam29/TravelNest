@@ -14,11 +14,14 @@ const PackageDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchPackageDetails();
-  }, [id]);
 
   const fetchPackageDetails = async () => {
+    useEffect(() => {
+      fetchPackageDetails();
+    }, [id, fetchPackageDetails]); // Add fetchPackageDetails to dependency arrayconst fetchPackageDetails = async () => {
+      // ...
+    };
+    
     if (!id) {
       setError('No package ID provided');
       setLoading(false);
@@ -41,7 +44,6 @@ const PackageDetails: React.FC = () => {
       setBookingError('Invalid package');
       return;
     }
-
     try {
       // You might want to add a date picker for travel date in a real app
       const booking = await bookingService.createBooking({
