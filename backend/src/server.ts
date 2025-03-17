@@ -3,6 +3,11 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
+const app = express();
+// Add this before your other routes
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'API is working' });
+});
 // Import routes
 import authRoutes from './routes/authRoutes';
 import packageRoutes from './routes/packageRoutes';
@@ -12,7 +17,6 @@ import userRoutes from './routes/userRoutes';
 // Load environment variables
 dotenv.config();
 
-const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
