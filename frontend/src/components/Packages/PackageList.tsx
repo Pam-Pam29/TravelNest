@@ -1,4 +1,4 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { packageService } from '../../services/packageService';
 import { Package } from '../../types/Package';
@@ -13,7 +13,9 @@ const PackageList: React.FC = () => {
   const [maxPrice, setMaxPrice] = useState('');
   const [destination, setDestination] = useState('');
 
-
+useEffect(() => {
+  fetchPackages();
+}, []);
 
   const fetchPackages = async () => {
     try {
@@ -31,7 +33,7 @@ const PackageList: React.FC = () => {
       console.error(err);
     }
   };
-
+ 
   const handleFilterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     fetchPackages();
