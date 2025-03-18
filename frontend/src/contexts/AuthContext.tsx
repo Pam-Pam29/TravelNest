@@ -1,42 +1,35 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { User } from '../types/User';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { User } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
 import { authService } from '../services/authService';
 
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, firstName?: string, lastName?: string) => Promise<void>;
-  logout: () => void;
+  register: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(authService.getCurrentUser());
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(setUser);
+    return () => unsubscribe();
+  }, []);
 
   const login = async (email: string, password: string) => {
-    const loggedInUser = await authService.login({ email, password });
-    setUser(loggedInUser);
+    await authService.login(email, password);
   };
 
-  const register = async (
-    email: string, 
-    password: string, 
-    firstName?: string, 
-    lastName?: string
-  ) => {
-    const registeredUser = await authService.register({
-      email, 
-      password, 
-      firstName, 
-      lastName
-    });
-    setUser(registeredUser);
+  const register = async (email: string, password: string) => {
+    await authService.register(email, password);
   };
 
-  const logout = () => {
-    authService.logout();
-    setUser(null);
+  const logout = async () => {
+    await authService.logout();
   };
 
   return (

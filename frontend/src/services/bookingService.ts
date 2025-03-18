@@ -22,7 +22,7 @@ export const bookingService = {
   async getUserBookings() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const token = authService.getToken();
-    const response = await axios.get(`${API_URL}/bookings`, {
+    const response = await axios.get(`${API_URL}api/bookings`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     return response.data;
