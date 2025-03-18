@@ -5,6 +5,7 @@ import { bookingService } from '../../services/bookingService';
 import { Booking } from '../../types/Booking';
 
 const UserDashboard: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user, logout } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,7 +43,7 @@ const UserDashboard: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Welcome, {user?.firstName || 'Traveler'}</h1>
+        <h1 className="text-3xl font-bold">Welcome, { 'Traveler'}</h1>
         <button 
           onClick={logout}
           className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"

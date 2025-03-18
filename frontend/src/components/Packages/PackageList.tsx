@@ -1,10 +1,12 @@
+import React, { useState, useEffect } from 'react';
 import { 
   collection, 
-  addDoc, 
+  addDoc,
   getDocs, 
-  doc, 
+  doc,
   getDoc,
   query,
+
   where
 } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
@@ -16,6 +18,7 @@ interface PackageFilters {
   destination?: string;
 }
 
+// Define the service outside of the component
 export const packageService = {
   async getAllPackages(filters?: PackageFilters): Promise<Package[]> {
     try {
@@ -60,7 +63,9 @@ export const packageService = {
     }
   },
 
+  // Keep the other methods from your original code
   async getPackageById(id: string): Promise<Package> {
+    // Your existing code
     try {
       const packageDoc = doc(db, 'packages', id);
       const packageSnapshot = await getDoc(packageDoc);
@@ -88,6 +93,7 @@ export const packageService = {
   },
 
   async createPackage(packageData: Package): Promise<string> {
+    // Your existing code
     try {
       const docRef = await addDoc(collection(db, 'packages'), {
         title: packageData.title,
@@ -106,3 +112,52 @@ export const packageService = {
     }
   }
 };
+
+const PackageList: React.FC = () => {
+  const [packages, setPackages] = useState<Package[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const packagesData = await packageService.getAllPackages();
+        setPackages(packagesData);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch packages');
+        setLoading(false);
+        console.error(err);
+      }
+    };
+
+    fetchPackages();
+  }, []);
+
+  if (loading) return <div>Loading packages...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <div className="package-list-container">
+      <h1>Available Travel Packages</h1>
+      {packages.length === 0 ? (
+        <p>No packages available at the moment.</p>
+      ) : (
+        <div className="package-grid">
+          {packages.map((pkg) => (
+            <div key={pkg._id} className="package-card">
+              <h3>{pkg.title}</h3>
+              <p>{pkg.description}</p>
+              <p>Price: ${pkg.price}</p>
+              <p>Duration: {pkg.duration} days</p>
+              <p>Availability: {pkg.availability} spots left</p>
+              <button>View Details</button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PackageList;

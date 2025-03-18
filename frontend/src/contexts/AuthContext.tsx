@@ -6,7 +6,7 @@ import { authService } from '../services/authService';
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, firstname: string, lastname: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -24,8 +24,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await authService.login(email, password);
   };
 
-  const register = async (email: string, password: string) => {
-    await authService.register(email, password);
+  const register = async (email: string, password: string ,firstname: string, lastname: string) => {
+    await authService.register(email, password,firstname, lastname);
   };
 
   const logout = async () => {
