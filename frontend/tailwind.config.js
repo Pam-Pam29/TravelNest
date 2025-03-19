@@ -5,6 +5,7 @@ module.exports = {
     "./src//*.{js,jsx,ts,tsx}",
     "./public/index.html"
   ],
+
   // Extend or customize the default theme
   theme: {
     extend: {
