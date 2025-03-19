@@ -3,6 +3,7 @@ module.exports = {
   // Specify which files Tailwind should scan for classes
   content: [
     "./src//*.{js,jsx,ts,tsx}",
+    "./public/index.html"
   ],
   // Extend or customize the default theme
   theme: {
@@ -46,4 +47,4 @@ module.exports = {
   },
   // Add any Tailwind plugins
   plugins: [],
-}
+};
