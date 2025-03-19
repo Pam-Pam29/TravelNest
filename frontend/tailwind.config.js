@@ -2,7 +2,7 @@
 module.exports = {
   // Specify which files Tailwind should scan for classes
   content: [
-    "./src//*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
     "./public/index.html"
   ],
 
